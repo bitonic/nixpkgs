@@ -23,11 +23,14 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "blender";
-  version = "2.91.0";
+  version = "2.93.0-b5d39f9b469e";
 
-  src = fetchurl {
-    url = "https://download.blender.org/source/${pname}-${version}.tar.xz";
-    sha256 = "0x396lgmk0dq9115yrc36s8zwxzmjr490sr5n2y6w27y17yllyjm";
+  src = pkgs.fetchFromGitHub {
+    owner = "blender";
+    repo = "blender";
+    rev = "b5d39f9b469e6a1688bb4498f6635bd5e23a35ef";
+    sha256 = "17lbfwpj9j3z074b0zfl91vvvv3spykzr54r77sbk28ywnf0lply";
+    fetchSubmodules = true;
   };
 
   patches = lib.optional stdenv.isDarwin ./darwin.patch;
@@ -43,6 +46,7 @@ stdenv.mkDerivation rec {
       makeWrapper
       embree
       gmp
+      pugixml
     ]
     ++ (if (!stdenv.isDarwin) then [
       libXi libX11 libXext libXrender
@@ -52,7 +56,7 @@ stdenv.mkDerivation rec {
       openvdb
     ]
     else [
-      pugixml llvmPackages.openmp SDL Cocoa CoreGraphics ForceFeedback OpenAL OpenGL
+      llvmPackages.openmp SDL Cocoa CoreGraphics ForceFeedback OpenAL OpenGL
     ])
     ++ optional jackaudioSupport libjack2
     ++ optional cudaSupport cudatoolkit
@@ -106,6 +110,7 @@ stdenv.mkDerivation rec {
       "-DWITH_TBB=ON"
       "-DWITH_IMAGE_OPENJPEG=ON"
       "-DWITH_OPENCOLLADA=${if colladaSupport then "ON" else "OFF"}"
+      "-DPYTHON_NUMPY_INCLUDE_DIRS=${python3Packages.numpy}/${python3Packages.python.sitePackages}/numpy/core/include"
     ]
     ++ optionals stdenv.isDarwin [
       "-DWITH_CYCLES_OSL=OFF" # requires LLVM

@@ -29,6 +29,10 @@ stdenv.mkDerivation rec {
       url = "https://github.com/OpenImageIO/oiio/pull/2441/commits/e9bdd69596103edf41b659ad8ab0ca4ce002f6f5.patch";
       sha256 = "0x1wmjf1jrm19d1izhs1cs3y1if9al1zx48lahkfswyjag3r5dn0";
     })
+    (pkgs.fetchpatch {
+      url = "https://github.com/bitonic/oiio/commit/24550802869baf2cfaee7f1628ef30dd66ca656b.patch";
+      sha256 = "1bkzlx53v7f02j3cll2y51n83bcrxlhkdadhraz1mvzfdspfv1mf";
+    })
   ];
 
   outputs = [ "bin" "out" "dev" "doc" ];
